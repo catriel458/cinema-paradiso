@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Catálogo de Películas</title>
+    {% load static %}
+    <style>
+        /* Fondo de la página */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1c1c1c;
+            color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+  header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #9b111e;
+            padding: 10px 20px;
+            width: 100%;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: auto; /* Para centrar el logo */
+        }
+
+        /* Enlace para "Iniciar sesión" */
+        .login-link {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #f0a500;
+            transition: background-color 0.3s;
+            position: absolute;
+            right: 20px; /* Alinea el botón al extremo derecho */
+            top: 10px;
+        }
+
+        .login-link:hover {
+            background-color: #d78800;
+            text-decoration: none; /* Elimina el subrayado al pasar el mouse */
+        }
+
+
+        /* Cabecera */
+        h1 {
+            background-color: #9b111e;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            font-size: 36px;
+            font-weight: bold;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 0;
+            width: 100%;
+        }
+
+        #popcorn {
+            width: 70px;
+            height: auto;
+            margin-right: 10px;
+        }
+
+        /* Enlace para agregar película */
+        a {
+            color: #f0a500;
+            text-decoration: none;
+            display: inline-block;
+            margin: 20px;
+            font-size: 18px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Estilo para el listado de películas */
+        ul {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px;
+            padding: 0;
+            list-style-type: none;
+            width: 80%;
+        }
+
+        ul li {
+            background-color: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        ul li:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Imagen de la película */
+        ul li img {
+            width: 100%;
+            height: 300px;
+            object-fit: contain;
+        }
+
+        /* Título de la película y el ícono de editar */
+        ul li h2 {
+            background-color: #9b111e;
+            color: #fff;
+            margin: 0;
+            padding-left: 16%;
+            font-size: 18px;
+            text-transform: uppercase;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Estilo para el ícono de editar */
+        ul li a {
+            font-size: 20px;
+            color: #f0a500;
+            margin-left: 10px;
+            text-decoration: none;
+        }
+
+        ul li a:hover {
+            color: #fff;
+        }
+
+        /* Descripción de la película */
+        ul li p {
+            padding: 10px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #dcdcdc;
+            text-align: center;
+            margin-top: -10px;
+        }
+
+        /* Fecha de estreno */
+        ul li .fecha-estreno {
+            font-size: 14px;
+            font-weight: bold;
+            color: #f0a500;
+            margin: 5px 0;
+            text-align: center;
+        }
+
+        /* Enlaces */
+        ul li a {
+            display: block;
+            color: #f0a500;
+            text-decoration: none;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        ul li a:hover {
+            text-decoration: underline;
+        }
+
+        .action-links a {
+            font-size: 24px;
+            color: #f0a500;
+        }
+
+        .action-links a:hover {
+            color: #fff;
+        }
+
+        /* Botón para agregar película */
+        .add-movie-btn {
+            background-color: #f0a500;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .add-movie-btn:hover {
+            background-color: #d78800;
+            transform: scale(1.05);
+            text-decoration: none;
+        }
+
+        /* Estilos del buscador */
+        #buscador {
+            position: relative;
+            width: 80%;
+            max-width: 200px;
+            margin: 20px auto;
+        }
+
+        #input-busqueda {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            background-color: #2c2c2c;
+            color: #f5f5f5;
+            transition: all 0.3s;
+        }
+
+        #input-busqueda:focus {
+            border-color: #f0a500;
+            box-shadow: 0 0 8px rgba(240, 165, 0, 0.8);
+        }
+
+        /* Películas ocultas por defecto cuando no coinciden con la búsqueda */
+        .pelicula {
+            display: block;
+        }
+
+      /* Paginación */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px 0;
+    font-size: 18px;
+    color: #f5f5f5;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Enlaces de la paginación */
+.pagination a,
+.pagination span {
+    margin: 0 8px;
+    padding: 10px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    background-color: #1c1c1c; /* Fondo oscuro */
+    color: #f5f5f5; /* Texto claro */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease-in-out;
+    font-weight: bold;
+}
+
+/* Hover de enlaces */
+.pagination a:hover {
+    background-color: #f0a500; /* Amarillo brillante */
+    color: #1c1c1c; /* Texto oscuro */
+    transform: scale(1.1); /* Aumenta tamaño */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Página actual */
+.pagination .current {
+    background: linear-gradient(135deg, #9b111e, #f0a500); /* Gradiente inspirado en alfombra roja */
+    color: #fff;
+    font-weight: bold;
+    border: 2px solid #f0a500; /* Resalta la página actual */
+    box-shadow: 0 4px 8px rgba(240, 165, 0, 0.6);
+    cursor: default;
+}
+
+/* Estado deshabilitado */
+.pagination .disabled {
+    background-color: #444; /* Fondo apagado */
+    color: #aaa; /* Texto apagado */
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+ 
+        /* Nuevo botón de opciones */
+        .opciones-btn {
+            background-color: #f0a500;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .opciones-btn:hover {
+            background-color: #d78800;
+            transform: scale(1.05);
+        }
+
+        /* Estilos para el modal de opciones */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 400px;
+            color: #f5f5f5;
+        }
+
+        .modal-content button {
+            background-color: #f0a500;
+            color: #fff;
+            font-size: 18px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .modal-content button:hover {
+            background-color: #d78800;
+        }
+
+        .close-btn {
+            color: #f5f5f5;
+            font-size: 24px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+        
+   /* Saludo al usuario */
+.welcome-message {
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+/* Botón para cerrar sesión */
+.logout-btn {
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #f0a500; /* Mismo color que el botón de iniciar sesión */
+    transition: background-color 0.3s;
+    margin-top: 10px; /* Añadir margen superior para que esté debajo del nombre */
+    margin-left: auto;
+    margin-right: auto;
+    display: block; /* Asegurarse de que el botón es un bloque */
+}
+
+.logout-btn:hover {
+    background-color: #d78800; /* Mismo hover que el botón de iniciar sesión */
+    text-decoration: none;
+}
+
+/* Avatar */
+.avatar {
+    width: 40px;  /* Tamaño del avatar */
+    height: 40px; /* Tamaño del avatar */
+    border-radius: 50%; /* Lo hace redondo */
+    margin-left: 10px; /* Espaciado a la izquierda */
+    vertical-align: middle; /* Alineación vertical para que el avatar quede al nivel del texto */
+}
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="/media/iconos/icono.png" alt="popcorn" id="popcorn">
+            <h1>Cinema Paradiso</h1>
+        </div>
+    
+        {% if user.is_authenticated %}
+            <p class="welcome-message">
+                😊 Bienvenido  
+                <a href="{% url 'panel_usuario' %}">
+                    <!-- Avatar -->
+                    {% if user.profile.avatar %}
+                        <img src="{{ user.profile.avatar.url }}" alt="Avatar" class="avatar">
+                    {% else %}
+                        <span>Sin Avatar,</span>
+                    {% endif %}
+                    {{ user.username }}
+                </a>
+            </p>
+            <!-- Formulario para cerrar sesión -->
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Cerrar Sesión</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}" class="login-link">Iniciar Sesión</a>
+        {% endif %}
+    </header>
+    
+    
+    <!-- Buscador -->
+    <div id="buscador">
+        <input
+            type="text"
+            id="input-busqueda"
+            placeholder="Buscar películas..."
+            autocomplete="off"
+        >
+    </div>
+
+    <ul>
+        {% for pelicula in peliculas %}
+        <li class="pelicula" data-titulo="{{ pelicula.titulo|lower }}">
+            <h2>{{ pelicula.titulo }} <a href="{% url 'editar_pelicula' pk=pelicula.pk %}">✏️</a></h2>
+            <p class="fecha-estreno">Fecha de estreno: {{ pelicula.fecha_estreno|date:"d M, Y" }}</p>
+            <p>{{ pelicula.descripcion }}</p>
+            <img src="{{ pelicula.portada.url }}" alt="{{ pelicula.titulo }}">
+            <a href="{{ pelicula.trailer_url }}" target="_blank">Ver trailer</a>
+        </li>
+        {% endfor %}
+    </ul>
+
+   <!-- Botón para mostrar opciones de carga -->
+   <button class="opciones-btn" id="opcionesBtn">Agregar nueva película</button>
+
+   <!-- Modal de opciones -->
+   <div id="modalOpciones" class="modal">
+       <div class="modal-content">
+           <span class="close-btn" id="closeModal">&times;</span>
+           <h3>Selecciona una opción</h3>
+           <button id="cargaManualBtn">Carga Manual</button>
+           <button id="cargaExcelBtn">Carga de Excel</button>
+       </div>
+   </div>
+
+   <!-- Cargar archivo Excel -->
+   <input type="file" id="excelInput" style="display: none;" accept=".xls, .xlsx" />
+
+
+       <!-- Paginación -->
+<div class="pagination">
+    <span class="step-links">
+        {% if peliculas.has_previous %}
+        <a href="?page=1" class="page-link">&laquo; Primera</a>
+        <a href="?page={{ peliculas.previous_page_number }}" class="page-link">Anterior</a>
+        {% endif %}
+
+        <span class="current">
+            Página {{ peliculas.number }} de {{ peliculas.paginator.num_pages }}
+        </span>
+
+        {% if peliculas.has_next %}
+        <a href="?page={{ peliculas.next_page_number }}" class="page-link">Siguiente</a>
+        <a href="?page={{ peliculas.paginator.num_pages }}" class="page-link">Última &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+
+    <!-- Script de búsqueda -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const inputBusqueda = document.getElementById("input-busqueda");
+            const peliculas = document.querySelectorAll(".pelicula");
+
+            inputBusqueda.addEventListener("input", function () {
+                const query = inputBusqueda.value.trim().toLowerCase();
+
+                peliculas.forEach(pelicula => {
+                    const titulo = pelicula.getAttribute("data-titulo");
+
+                    if (titulo.includes(query)) {
+                        pelicula.style.display = "block"; // Mostrar película
+                    } else {
+                        pelicula.style.display = "none"; // Ocultar película
+                    }
+                });
+            });
+        });
+
+        // Script para manejar el modal 
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Mostrar el modal de opciones
+            const opcionesBtn = document.getElementById("opcionesBtn");
+            const modal = document.getElementById("modalOpciones");
+            const closeModal = document.getElementById("closeModal");
+
+            opcionesBtn.addEventListener("click", function () {
+                modal.style.display = "flex";
+            });
+
+            closeModal.addEventListener("click", function () {
+                modal.style.display = "none";
+            });
+
+            // Opción carga manual (redirigir a formulario de carga)
+            document.getElementById("cargaManualBtn").addEventListener("click", function () {
+                window.location.href = "{% url 'agregar_pelicula' %}";
+            });
+
+            // Opción carga Excel (mostrar input de archivo)
+            document.getElementById("cargaExcelBtn").addEventListener("click", function () {
+                document.getElementById("excelInput").click();
+                modal.style.display = "none";
+            });
+
+            // Cuando se seleccione un archivo Excel
+            document.getElementById("excelInput").addEventListener("change", function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const formData = new FormData();
+                    formData.append("excel_file", file);
+
+                    // Enviar el archivo al servidor usando AJAX
+                    fetch("{% url 'cargar_excel' %}", {
+                        method: "POST",
+                        body: formData,
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert("Archivo cargado correctamente");
+                            // Redirigir o hacer algo después de cargar el Excel
+                        } else {
+                            alert("Error al cargar el archivo");
+                        }
+                    })
+                    .catch(error => {
+                        alert("Error al cargar el archivo: " + error);
+                    });
+                }
+            });
+        });
+
+    </script>
+</body>
+
+</html>

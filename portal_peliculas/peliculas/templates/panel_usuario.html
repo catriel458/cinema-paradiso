@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Usuario</title>
+    <style>
+        /* Fondo de la página */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1c1c1c;
+            color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #9b111e;
+            padding: 10px 20px;
+            width: 100%;
+        }
+
+        /* Cabecera */
+        h1 {
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            font-size: 36px;
+            font-weight: bold;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 0;
+            width: 100%;
+        }
+
+        .user-panel {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 800px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            margin-left: 10%;
+            margin-top: 3%;
+            margin-bottom: 3%;
+        }
+
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-top: 20px;
+        }
+
+        h2, h3 {
+            color: #f0a500;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        button[type="submit"] {
+            background-color: #f0a500;
+            color: white;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #d78800;
+        }
+
+        p {
+            margin-top: 10px;
+        }
+
+        /* Estilo para los mensajes */
+        .welcome-message {
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            margin-left: auto;
+            margin-right: 20px;
+        }
+
+        /* Estilo para el botón de cierre de sesión */
+        .logout-btn {
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #f0a500;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        .logout-btn:hover {
+            background-color: #d78800;
+            text-decoration: none;
+        }
+
+        /* Estilo para el botón "Volver a Inicio" */
+        .back-btn {
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #9b111e; /* Color verde */
+            margin-top: 10px;
+            margin-right: 20px; /* Para separar de Cerrar Sesión */
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background-color: #6e0711; /* Color más oscuro */
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Panel de Usuario</h1>
+    </header>
+
+    <main>
+        <section class="user-panel">
+            <h2>Bienvenido, {{ user.username }}</h2>
+
+            {% if profile.avatar %}
+                <img src="{{ profile.avatar.url }}" alt="Avatar" class="user-avatar">
+            {% else %}
+                <p>No tienes un avatar establecido.</p>
+            {% endif %}
+
+            <!-- Formulario para cambiar el avatar -->
+            <h3>Cambiar Avatar</h3>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ avatar_form.as_p }}
+                <button type="submit" name="update_avatar">Actualizar Avatar</button>
+            </form>
+
+            <!-- Formulario para cambiar la contraseña -->
+            <h3>Cambiar Contraseña</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ password_form.as_p }}
+                <button type="submit" name="update_password">Cambiar Contraseña</button>
+            </form>
+
+            <!-- Botón Volver a Inicio -->
+            <a href="{% url 'home' %}" class="back-btn">Volver a la Página Principal</a>
+
+            <!-- Formulario de cierre de sesión -->
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Cerrar Sesión</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>
