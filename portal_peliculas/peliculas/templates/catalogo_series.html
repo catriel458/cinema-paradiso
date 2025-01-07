@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Catálogo de Películas</title>
+    <title>Catálogo de Series</title>
     {% load static %}
     <style>
         /* Fondo de la página */
@@ -204,7 +204,7 @@ header nav button:hover {
             line-height: 1.6;
             color: #dcdcdc;
             text-align: center;
-            margin-top: -10px;
+
         }
 
         /* Fecha de estreno */
@@ -487,8 +487,10 @@ header nav button:hover {
         {% endif %}
     </header>
     
+    {% if user.is_authenticated %} 
+
     <section>
-        <h2>Próximos estrenos</h2>
+        <h2>Ver Series</h2>
     </section>
     
     <!-- Buscador -->
@@ -496,25 +498,24 @@ header nav button:hover {
         <input
             type="text"
             id="input-busqueda"
-            placeholder="Buscar películas..."
+            placeholder="Buscar Series..."
             autocomplete="off"
         >
     </div>
 
     <ul>
-        {% for pelicula in peliculas %}
-        <li class="pelicula" data-titulo="{{ pelicula.titulo|lower }}">
-            <h2>{{ pelicula.titulo }} <a href="{% url 'editar_pelicula' pk=pelicula.pk %}">✏️</a></h2>
-            <p class="fecha-estreno">Fecha de estreno: {{ pelicula.fecha_estreno|date:"d M, Y" }}</p>
-            <p>{{ pelicula.descripcion }}</p>
-            <img src="{{ pelicula.portada.url }}" alt="{{ pelicula.titulo }}">
-            <a href="{{ pelicula.trailer_url }}" target="_blank">Ver trailer</a>
+        {% for serie in series %}
+        <li class="pelicula" data-titulo="{{ serie.titulo|lower }}">
+            <h2>{{ serie.titulo }} <a href="{% url 'editar_serie' pk=serie.pk %}">✏️</a></h2>
+            <p>{{ serie.descripcion }}</p>
+            <img src="{{ serie.portada.url }}" alt="{{ serie.titulo }}">
+            <a href="{{ serie.video_url }}" target="_blank">Ver Serie</a>
         </li>
         {% endfor %}
     </ul>
 
    <!-- Botón para mostrar opciones de carga -->
-   <button class="opciones-btn" id="opcionesBtn">Agregar nueva película</button>
+   <button class="opciones-btn" id="opcionesBtn">Agregar nueva Serie</button>
 
    <!-- Modal de opciones -->
    <div id="modalOpciones" class="modal">
@@ -533,22 +534,26 @@ header nav button:hover {
        <!-- Paginación -->
 <div class="pagination">
     <span class="step-links">
-        {% if peliculas.has_previous %}
+        {% if series.has_previous %}
         <a href="?page=1" class="page-link">&laquo; Primera</a>
-        <a href="?page={{ peliculas.previous_page_number }}" class="page-link">Anterior</a>
+        <a href="?page={{ series.previous_page_number }}" class="page-link">Anterior</a>
         {% endif %}
 
         <span class="current">
-            Página {{ peliculas.number }} de {{ peliculas.paginator.num_pages }}
+            Página {{ series.number }} de {{ series.paginator.num_pages }}
         </span>
 
-        {% if peliculas.has_next %}
-        <a href="?page={{ peliculas.next_page_number }}" class="page-link">Siguiente</a>
-        <a href="?page={{ peliculas.paginator.num_pages }}" class="page-link">Última &raquo;</a>
+        {% if series.has_next %}
+        <a href="?page={{ series.next_page_number }}" class="page-link">Siguiente</a>
+        <a href="?page={{ series.paginator.num_pages }}" class="page-link">Última &raquo;</a>
         {% endif %}
     </span>
 </div>
 
+{% else %}
+    <h2>Para disfrutar las mejores series gratis debe logearse primero.</h2>
+    <p><a href="{% url 'login' %}">Iniciar sesión</a></p>
+{% endif %}
 
     <!-- Script de búsqueda -->
     <script>
@@ -589,7 +594,7 @@ header nav button:hover {
 
             // Opción carga manual (redirigir a formulario de carga)
             document.getElementById("cargaManualBtn").addEventListener("click", function () {
-                window.location.href = "{% url 'agregar_pelicula' %}";
+                window.location.href = "{% url 'agregar_serie' %}";
             });
 
             // Opción carga Excel (mostrar input de archivo)

@@ -1,5 +1,6 @@
 from django import forms
 from .models import Pelicula
+from .models import Serie
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from .models import Usuario, Profile
 
@@ -10,6 +11,11 @@ class PeliculaForm(forms.ModelForm):
         widgets = {
             'fecha_estreno': forms.DateInput(attrs={'type': 'date'}),  # Input tipo fecha
         }
+
+class SerieForm(forms.ModelForm):
+    class Meta:
+        model = Serie
+        fields = ['titulo', 'descripcion', 'portada', 'video_url']
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'class': 'form-control'}))

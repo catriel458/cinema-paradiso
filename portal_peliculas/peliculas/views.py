@@ -11,6 +11,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.mail import send_mail
 from .forms import RegistroForm
+from .forms import SerieForm
 from .forms import CustomUserCreationForm
 from .models import Usuario,Profile
 from django.http import HttpResponse
@@ -21,6 +22,8 @@ from .forms import CustomPasswordChangeForm
 from django.core.files.images import get_image_dimensions
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
+from .models import Serie
+
 
 def home(request):
     return render(request, 'catalogo.html')
@@ -64,6 +67,7 @@ def login_view(request):
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
+
 def registro_view(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -129,11 +133,52 @@ def editar_pelicula(request, pk):
         form = PeliculaForm(instance=pelicula)
     return render(request, 'editar_pelicula.html', {'form': form, 'pelicula': pelicula})
 
-# Vista para eliminar una película
+
 def eliminar_pelicula(request, pk):
     pelicula = get_object_or_404(Pelicula, pk=pk)
     pelicula.delete()
     return redirect('catalogo')  # Redirige al catálogo después de eliminar la película
+
+# Vista para agregar una nueva película
+def agregar_serie(request):
+    if request.method == 'POST':
+        form = SerieForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('catalogo_series')  # Redirige a las series después de guardar
+    else:
+        form = SerieForm()  # Corregido el formulario de serie
+    return render(request, 'agregar_serie.html', {'form': form})
+
+# Vista para editar una película
+def editar_serie(request, pk):
+    serie = get_object_or_404(Serie, pk=pk)  # Corregido: usar `Serie` en vez de `Pelicula`
+    if request.method == 'POST':
+        form = SerieForm(request.POST, request.FILES, instance=serie)
+        if form.is_valid():
+            form.save()
+            return redirect('catalogo_series')  # Redirige a las series después de guardar los cambios
+    else:
+        form = SerieForm(instance=serie)
+    return render(request, 'editar_serie.html', {'form': form, 'serie': serie})
+
+# Vista para eliminar una serie
+def eliminar_serie(request, pk):
+    serie = get_object_or_404(Serie, pk=pk)
+    serie.delete()  # Corregido: cambiar `pelicula.delete()` a `serie.delete()`
+    return redirect('catalogo_series')  # Redirige a las series después de eliminar la serie
+
+# Vista para mostrar el catálogo de series
+def catalogo_series(request):
+    lista_series = Serie.objects.all().order_by('-titulo')  # Puedes ordenar por fecha si tienes un campo de fecha en `Serie`.
+    paginator = Paginator(lista_series, 6)
+    page_number = request.GET.get('page')
+    series = paginator.get_page(page_number)
+    return render(request, 'catalogo_series.html', {'series': series})
+
+
+
+# Vista para buscar películas
 
 def buscar_peliculas(request):
     query = request.GET.get('q', '')
@@ -149,6 +194,23 @@ def buscar_peliculas(request):
             'fecha_estreno': pelicula.fecha_estreno.strftime('%d %b, %Y'),
             'imagen': pelicula.portada.url if pelicula.portada else None
         } for pelicula in peliculas]
+        return JsonResponse(resultados, safe=False)
+    return JsonResponse([], safe=False)
+
+# Vista para buscar series
+def buscar_series(request):
+    query = request.GET.get('q', '')
+    if query:
+        series = Serie.objects.filter(
+            titulo__icontains=query
+        ) | Serie.objects.filter(
+            descripcion__icontains=query
+        )
+        resultados = [{
+            'titulo': serie.titulo,
+            'descripcion': serie.descripcion,
+            'imagen': serie.portada.url if serie.portada else None  # Corregido
+        } for serie in series]
         return JsonResponse(resultados, safe=False)
     return JsonResponse([], safe=False)
 

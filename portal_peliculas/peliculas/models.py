@@ -29,3 +29,13 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username  # Representación del perfil por nombre de usuario
+
+# Modelo de Serie
+class Serie(models.Model):
+    titulo = models.CharField(max_length=255)
+    descripcion = models.TextField()
+    portada = models.ImageField(upload_to='portadas_series/')  # Ruta de carga para portadas de series
+    video_url = models.URLField()  # URL para ver la serie en Drive
+
+    def __str__(self):
+        return self.titulo

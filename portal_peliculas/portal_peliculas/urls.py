@@ -18,7 +18,11 @@ urlpatterns = [
     path('activate/<uuid:token>/', views.activate_account, name='activate'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('panel_usuario/', views.panel_usuario, name='panel_usuario'),
-    path('', views.home, name='home'),  # Definir la vista principal
+    path('', views.home, name='home'),
+    path('series/', views.catalogo_series, name='catalogo_series'),
+    path('agregar_serie/', views.agregar_serie, name='agregar_serie'),
+    path('editar_serie/<int:pk>/', views.editar_serie, name='editar_serie'),
+    path('eliminar_serie/<int:pk>/', views.eliminar_serie, name='eliminar_serie'),  # Definir la vista principal
 ] 
 
 # Aquí agregamos las rutas estáticas de los archivos MEDIA
