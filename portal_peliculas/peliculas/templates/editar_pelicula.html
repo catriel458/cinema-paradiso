@@ -2,7 +2,7 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Película: {{ pelicula.titulo }}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
@@ -139,6 +139,107 @@
             background-color: #7a0c17;
             text-decoration: none;
         }
+
+        /* Media queries para dispositivos móviles - TAMAÑOS AUMENTADOS */
+@media screen and (max-width: 768px) {
+    /* Encabezado */
+    h1 {
+        font-size: 28px;
+        padding: 20px;
+    }
+
+    #popcorn {
+        width: 60px;
+    }
+
+    /* Contenedor del formulario */
+    form {
+        width: 98%;
+        padding: 25px;
+        margin: 15px auto;
+    }
+
+    /* Labels y textos */
+    form label {
+        font-size: 20px;
+        margin-bottom: 12px;
+        font-weight: bold;
+    }
+
+    form p {
+        margin: 20px 0;
+        font-size: 20px;
+    }
+
+    /* Inputs y campos de formulario */
+    form input, 
+    form select, 
+    form textarea {
+        padding: 16px;
+        font-size: 18px;
+        margin: 10px 0;
+        border-width: 3px;
+    }
+
+    /* Input file específicamente */
+    form input[type="file"] {
+        padding: 20px;
+        font-size: 18px;
+        background-color: #2c2c2c;
+        border: 3px dashed #444;
+    }
+
+    /* Textarea más alto para móviles */
+    form textarea {
+        height: 150px;
+        min-height: 120px;
+    }
+
+    /* Botones más grandes */
+    button, 
+    .cancel-button {
+        width: 100%;
+        padding: 20px;
+        font-size: 22px;
+        margin: 15px 0;
+        border-radius: 12px;
+    }
+
+    /* Mensajes de error o ayuda */
+    .helptext, 
+    .errorlist {
+        font-size: 18px;
+        margin: 10px 0;
+    }
+}
+
+/* Media queries para pantallas muy pequeñas */
+@media screen and (max-width: 480px) {
+    h1 {
+        font-size: 24px;
+    }
+
+    form {
+        padding: 20px;
+    }
+
+    form label {
+        font-size: 18px;
+    }
+
+    form input, 
+    form select, 
+    form textarea {
+        font-size: 18px;
+        padding: 15px;
+    }
+
+    button, 
+    .cancel-button {
+        padding: 18px;
+        font-size: 20px;
+    }
+}
 
 
 

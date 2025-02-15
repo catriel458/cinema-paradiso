@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Panel de Usuario</title>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         /* Fondo de la página */
         body {
@@ -129,6 +128,36 @@
         .back-btn:hover {
             background-color: #6e0711; /* Color más oscuro */
         }
+
+        @media (max-width: 768px) {
+    .user-panel {
+        width: 95%;  /* Ocupar casi todo el ancho */
+        max-width: none; /* Sin límite máximo */
+        margin-left: auto;
+        margin-right: auto;
+        padding: 15px; /* Reducir padding para mejor adaptación */
+    }
+
+    h1 {
+        font-size: 28px; /* Hacer el título más pequeño */
+    }
+
+    h2, h3 {
+        font-size: 22px; /* Ajustar subtítulos */
+    }
+
+    .user-avatar {
+        width: 80px; /* Reducir tamaño del avatar */
+        height: 80px;
+    }
+
+    button, .back-btn, .logout-btn {
+        width: 100%; /* Hacer los botones más grandes y fáciles de tocar */
+        font-size: 16px; /* Tamaño de texto más grande */
+        padding: 12px; /* Más espacio en botones */
+    }
+}
+
 
     </style>
 </head>
